@@ -1,0 +1,15 @@
+Dependency directories
+node_modules/
+
+Environment variables
+This file contains secret keys and database connection strings.
+NEVER commit this file to GitHub.
+.env
+
+Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+macOS specific files
+.DS_Store
