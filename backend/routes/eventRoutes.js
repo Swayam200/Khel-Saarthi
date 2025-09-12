@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-
-// Placeholder functions for event logic
-const createEvent = (req, res) => { res.send('Create Event Placeholder'); };
-const getAllEvents = (req, res) => { res.send('Get All Events Placeholder'); };
-const registerForEvent = (req, res) => { res.send(`Register for event ${req.params.id} Placeholder`); };
-
+const {
+    getAllEvents,
+    createEvent,
+    registerForEvent,
+} = require('../controllers/eventController');
+const { protect } = require('../middleware/authMiddleware');
 
 // Define routes
-router.post('/', createEvent);
-router.get('/', getAllEvents);
-router.post('/:id/register', registerForEvent);
+router.get('/', getAllEvents); // Publicly viewable
+router.post('/', protect, createEvent); // Must be logged in as a host
+router.post('/:id/register', protect, registerForEvent); // Must be logged in
 
 module.exports = router;
 
