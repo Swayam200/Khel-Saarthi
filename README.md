@@ -13,8 +13,9 @@ Follow these instructions to get the backend server up and running on your local
 ### Prerequisites  
 You will need the following software installed on your machine:
 
-- Node.js (which includes npm)
-- A free MongoDB Atlas account
+- Node.js (which includes npm)  
+~~- A free MongoDB Atlas account ~~
+Ask me for MongoDB Account Access
 
 #### Backend Setup
 Clone the repository (or if you already have it, navigate to the root khel-saarthi folder).
@@ -39,10 +40,24 @@ The port your server will run on (use 5001 or another free port)
 PORT=5001
 Preferably keep it 5001 only. Don't change it unless necessary.
 
-Get your MONGO_URI from your MongoDB Atlas dashboard and replace the placeholder in your .env file.
-
-Run the server:
-
+### Run the server:
+```
 node server.js
+```
+
+### Frontend Setup
+1.  Navigate to the `frontend` directory in a **new terminal window**:
+    ```bash
+    cd frontend
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Run the app:
+    ```bash
+    npx expo start
+    ```
+4.  Scan the QR code shown in the terminal using the Expo Go app on your phone.
 
 The server should now be running on the port you specified (e.g., http://localhost:5001).
