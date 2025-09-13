@@ -10,14 +10,22 @@ Khel Saarthi is a mobile-first platform designed to solve the fragmentation in I
 - **Event Discovery:** The home screen fetches and displays a list of all available events.
 
 ## Screenshots
-![Login Page](<frontend/project_screenshots/Login Page.jpeg>)
-### Login  
-![Register Page](<frontend/project_screenshots/Register Page.jpeg>)
-### Register
-![User Home Page](<frontend/project_screenshots/User Home Page.jpeg>)
-### User Home Page
-![Host Home Page](<frontend/project_screenshots/Host Home Page.jpeg>) 
-### Host Home Page
+
+<details>
+  <summary>Click to view screenshots</summary>
+
+  ### Login Page
+  ![Login Page](<frontend/project_screenshots/Login Page.jpeg>)
+
+  ### Register Page
+  ![Register Page](<frontend/project_screenshots/Register Page.jpeg>)
+
+  ### User Home Page
+  ![User Home Page](<frontend/project_screenshots/User Home Page.jpeg>)
+
+  ### Host Home Page
+  ![Host Home Page](<frontend/project_screenshots/Host Home Page.jpeg>)
+</details>
 
 ## Tech Stack
 
@@ -41,7 +49,7 @@ Follow these instructions to get the project up and running on your local machin
 
 ### Prerequisites
 You will need the following software installed:
-~~ - [Node.js](https://nodejs.org/) (which includes npm) ~~
+ - [Node.js](https://nodejs.org/) (which includes npm) ** Ignore this **
 - The [Expo Go](https://expo.dev/go) app on your mobile phone
 
 ### Backend Setup
