@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import AuthContext from '../context/AuthContext'; // Import context
+import AuthContext from '../context/AuthContext';
+import ParticipantsScreen from '../screens/ParticipantsScreen';
 
 // Import your screen components
 import HomeScreen from '../screens/HomeScreen';
@@ -34,6 +35,7 @@ const AppNavigator = () => {
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="CreateEvent" component={CreateEventScreen} />
                         <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
+                        <Stack.Screen name="Participants" component={ParticipantsScreen} />
                     </>
                 ) : (
                     // No user found, show the login/register screens
