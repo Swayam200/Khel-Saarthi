@@ -91,10 +91,39 @@ const getEventParticipants = asyncHandler(async (req, res) => {
     res.json(event.registeredParticipants);
 });
 
+// @desc    Update an event
+// @route   PUT /api/events/:id
+// @access  Private (Host only)
+const updateEvent = asyncHandler(async (req, res) => {
+    const { title, description, date, location } = req.body;
+    const event = await Event.findById(req.params.id);
+
+    if (!event) {
+        res.status(404);
+        throw new Error('Event not found');
+    }
+
+    // Check if the user is the host
+    if (event.host.toString() !== req.user._id.toString()) {
+        res.status(403);
+        throw new Error('User not authorized to update this event');
+    }
+
+    event.title = title || event.title;
+    event.description = description || event.description;
+    event.date = date || event.date;
+    event.location = location || event.location;
+
+    const updatedEvent = await event.save();
+    res.json(updatedEvent);
+});
+
+
 module.exports = {
     getAllEvents,
     getEventById,
     createEvent,
     registerForEvent,
     getEventParticipants,
+    updateEvent,
 };

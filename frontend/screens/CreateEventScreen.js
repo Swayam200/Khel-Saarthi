@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, ScrollView } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import api from '../api/api';
 import StyledButton from '../components/StyledButton';
 
@@ -7,39 +8,38 @@ const CreateEventScreen = ({ navigation }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
+    const [location, setLocation] = useState(null);
+
+    const handleMapPress = (e) => {
+        setLocation(e.nativeEvent.coordinate);
+    };
 
     const handleCreateEvent = async () => {
-        if (!title || !description || !date) {
-            Alert.alert('Error', 'Please fill in all fields.');
+        if (!title || !description || !date || !location) {
+            Alert.alert('Error', 'Please fill in all fields and select a location on the map.');
             return;
         }
-
-        // NOTE: This assumes you are logged in and have a token.
-        // We will implement token storage in the next step.
-        // For now, you must log in as a "host" in Postman, get the token,
-        // and manually add it to the api.js header for this to work.
 
         try {
             await api.post('/events', {
                 title,
                 description,
                 date,
-                // Hardcoded location for now
                 location: {
                     type: 'Point',
-                    coordinates: [77.4126, 23.2599], // Bhopal coordinates
+                    coordinates: [location.longitude, location.latitude],
                 },
             });
             Alert.alert('Success', 'Event created successfully!');
             navigation.goBack();
         } catch (error) {
-            console.error(error.response.data);
-            Alert.alert('Error', 'Could not create event. Are you logged in as a host?');
+            console.error(error.response?.data);
+            Alert.alert('Error', 'Could not create event.');
         }
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Create New Event</Text>
             <TextInput
                 style={styles.input}
@@ -52,7 +52,6 @@ const CreateEventScreen = ({ navigation }) => {
                 placeholder="Description"
                 value={description}
                 onChangeText={setDescription}
-                multiline
             />
             <TextInput
                 style={styles.input}
@@ -60,20 +59,32 @@ const CreateEventScreen = ({ navigation }) => {
                 value={date}
                 onChangeText={setDate}
             />
-            <StyledButton title="Create Event" onPress={handleCreateEvent} />
-        </View>
+            <Text style={styles.mapLabel}>Select Event Location</Text>
+            <MapView
+                style={styles.map}
+                initialRegion={{
+                    latitude: 23.2599,
+                    longitude: 77.4126,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }}
+                onPress={handleMapPress}
+            >
+                {location && <Marker coordinate={location} />}
+            </MapView>
+            <StyledButton title="Create Event" onPress={handleCreateEvent} style={{ marginTop: 20 }} />
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         padding: 20,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 24,
+        marginBottom: 20,
         textAlign: 'center',
     },
     input: {
@@ -83,6 +94,16 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 10,
         borderRadius: 5,
+    },
+    mapLabel: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 10,
+    },
+    map: {
+        width: '100%',
+        height: 300,
+        marginBottom: 10,
     },
 });
 

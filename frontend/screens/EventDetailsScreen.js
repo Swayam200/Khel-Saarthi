@@ -91,6 +91,16 @@ const EventDetailsScreen = ({ route, navigation }) => {
                 <Text style={styles.registeredText}>You are already registered for this event.</Text>
             )}
 
+            {user && isHost && (
+                <>
+                    <StyledButton
+                        title="Edit Event"
+                        onPress={() => navigation.navigate('EditEvent', { eventId: event._id })}
+                        style={{ backgroundColor: '#FF9500' }} // Orange color for edit
+                    />
+                </>
+            )}
+
         </ScrollView>
     );
 };
