@@ -2,52 +2,38 @@ const mongoose = require('mongoose');
 
 const eventSchema = mongoose.Schema(
     {
-        title: {
-            type: String,
-            required: true,
-        },
-        description: {
-            type: String,
-            required: true,
-        },
-        date: {
-            type: Date,
-            required: true,
-        },
+        title: { type: String, required: true },
+        description: { type: String, required: true },
+        date: { type: Date, required: true },
         location: {
-            // GeoJSON for location data
-            type: {
-                type: String,
-                enum: ['Point'],
-                required: true
-            },
-            coordinates: {
-                type: [Number], // [longitude, latitude]
-                required: true
-            }
+            type: { type: String, enum: ['Point'], required: true },
+            coordinates: { type: [Number], required: true }
+        },
+        category: {
+            type: String,
+            required: true,
+            enum: ['Cricket', 'Football', 'Badminton', 'Running', 'Other'],
+        },
+        skillLevel: {
+            type: String,
+            required: true,
+            enum: ['Beginner', 'Intermediate', 'Advanced', 'All Levels'],
+        },
+        entryFee: {
+            type: Number,
+            required: true,
+            default: 0,
         },
         host: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'User', // Reference to the User model
+            ref: 'User',
         },
-        registeredParticipants: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
-            },
-        ],
+        registeredParticipants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     },
-    {
-        timestamps: true,
-    }
+    { timestamps: true }
 );
 
-// Create a 2dsphere index on the location field for geospatial queries
 eventSchema.index({ location: '2dsphere' });
-
-
 const Event = mongoose.model('Event', eventSchema);
-
 module.exports = Event;
-

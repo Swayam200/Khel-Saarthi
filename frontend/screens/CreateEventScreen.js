@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import api from '../api/api';
 import StyledButton from '../components/StyledButton';
@@ -9,14 +9,20 @@ const CreateEventScreen = ({ navigation }) => {
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
     const [location, setLocation] = useState(null);
+    const [category, setCategory] = useState('');
+    const [skillLevel, setSkillLevel] = useState('');
+    const [entryFee, setEntryFee] = useState('0');
+
+    const categories = ['Cricket', 'Football', 'Badminton', 'Running', 'Other'];
+    const skillLevels = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'];
 
     const handleMapPress = (e) => {
         setLocation(e.nativeEvent.coordinate);
     };
 
     const handleCreateEvent = async () => {
-        if (!title || !description || !date || !location) {
-            Alert.alert('Error', 'Please fill in all fields and select a location on the map.');
+        if (!title || !description || !date || !location || !category || !skillLevel) {
+            Alert.alert('Error', 'Please fill in all fields and select a location, category, and skill level.');
             return;
         }
 
@@ -25,10 +31,10 @@ const CreateEventScreen = ({ navigation }) => {
                 title,
                 description,
                 date,
-                location: {
-                    type: 'Point',
-                    coordinates: [location.longitude, location.latitude],
-                },
+                location: { type: 'Point', coordinates: [location.longitude, location.latitude] },
+                category,
+                skillLevel,
+                entryFee: parseInt(entryFee),
             });
             Alert.alert('Success', 'Event created successfully!');
             navigation.goBack();
@@ -36,7 +42,7 @@ const CreateEventScreen = ({ navigation }) => {
             console.error(error.response?.data);
             Alert.alert('Error', 'Could not create event.');
         }
-    };
+    }; // <-- THE MISSING CLOSING BRACE WAS HERE
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -59,7 +65,33 @@ const CreateEventScreen = ({ navigation }) => {
                 value={date}
                 onChangeText={setDate}
             />
-            <Text style={styles.mapLabel}>Select Event Location</Text>
+
+            <Text style={styles.label}>Entry Fee (₹)</Text>
+            <TextInput style={styles.input} placeholder="0 for free" value={entryFee} onChangeText={setEntryFee} keyboardType="numeric" />
+
+            <Text style={styles.label}>Category</Text>
+            <View style={styles.optionsContainer}>
+                {categories.map(cat => (
+                    <TouchableOpacity
+                        key={cat}
+                        style={[styles.optionButton, category === cat && styles.selectedOption]}
+                        onPress={() => setCategory(cat)}
+                    >
+                        <Text style={[styles.optionText, category === cat && styles.selectedOptionText]}>{cat}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+
+            <Text style={styles.label}>Skill Level</Text>
+            <View style={styles.optionsContainer}>
+                {skillLevels.map(level => (
+                    <TouchableOpacity key={level} style={[styles.optionButton, skillLevel === level && styles.selectedOption]} onPress={() => setSkillLevel(level)}>
+                        <Text style={[styles.optionText, skillLevel === level && styles.selectedOptionText]}>{level}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+
+            <Text style={styles.label}>Select Event Location</Text>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -95,16 +127,39 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 5,
     },
-    mapLabel: {
+    label: {
         fontSize: 16,
         fontWeight: '600',
         marginBottom: 10,
+        marginTop: 10
     },
     map: {
         width: '100%',
         height: 300,
         marginBottom: 10,
     },
+    optionsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 10
+    },
+    optionButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 20,
+        backgroundColor: '#eee',
+        marginRight: 10,
+        marginBottom: 10
+    },
+    selectedOption: {
+        backgroundColor: '#007AFF'
+    },
+    optionText: {
+        color: 'black'
+    },
+    selectedOptionText: {
+        color: 'white'
+    }
 });
 
 export default CreateEventScreen;

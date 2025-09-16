@@ -1,11 +1,26 @@
 const asyncHandler = require('express-async-handler');
 const Event = require('../models/eventModel');
 
-// @desc    Get all events
+// @desc    Get all events with filtering
 // @route   GET /api/events
 // @access  Public
 const getAllEvents = asyncHandler(async (req, res) => {
-    const events = await Event.find({}).populate('host', 'name');
+    const { category, skillLevel, maxFee, search, startDate, endDate } = req.query;
+
+    let filter = {};
+
+    if (category) filter.category = category;
+    if (skillLevel) filter.skillLevel = skillLevel;
+    if (maxFee) filter.entryFee = { $lte: parseInt(maxFee) }; // lte = less than or equal to
+    if (search) filter.title = { $regex: search, $options: 'i' }; // regex for case-insensitive search
+
+    if (startDate || endDate) {
+        filter.date = {};
+        if (startDate) filter.date.$gte = new Date(startDate); // gte = greater than or equal to
+        if (endDate) filter.date.$lte = new Date(endDate);
+    }
+
+    const events = await Event.find(filter).populate('host', 'name');
     res.json(events);
 });
 
@@ -95,7 +110,7 @@ const getEventParticipants = asyncHandler(async (req, res) => {
 // @route   PUT /api/events/:id
 // @access  Private (Host only)
 const updateEvent = asyncHandler(async (req, res) => {
-    const { title, description, date, location } = req.body;
+    const { title, description, date, location, category, skillLevel, entryFee } = req.body;
     const event = await Event.findById(req.params.id);
 
     if (!event) {
@@ -109,10 +124,15 @@ const updateEvent = asyncHandler(async (req, res) => {
         throw new Error('User not authorized to update this event');
     }
 
+    // Update all fields from the request body
     event.title = title || event.title;
     event.description = description || event.description;
     event.date = date || event.date;
     event.location = location || event.location;
+    event.category = category || event.category;
+    event.skillLevel = skillLevel || event.skillLevel;
+    event.entryFee = entryFee !== undefined ? entryFee : event.entryFee;
+
 
     const updatedEvent = await event.save();
     res.json(updatedEvent);
