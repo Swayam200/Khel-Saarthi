@@ -1,14 +1,14 @@
 import React, { useContext, useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { ActivityIndicator, View } from 'react-native';
 import { io } from 'socket.io-client';
 import Constants from 'expo-constants';
 import Toast from 'react-native-toast-message';
-import AuthContext from '../context/AuthContext';
 import api from '../api/api';
+import AuthContext from '../context/AuthContext';
 
-// Import Screen Components
+// Import screen components
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -26,9 +26,9 @@ const AppNavigator = () => {
     useEffect(() => {
         let socket;
         if (user) {
-            const hostUri = Constants.expoConfig.hostUri;
-            const ipAddress = hostUri.split(':')[0];
-            const SERVER_URL = `http://${ipAddress}:5001`;
+            const SERVER_URL = process.env.NODE_ENV === 'development'
+                ? `http://${Constants.expoConfig.hostUri.split(':')[0]}:5001`
+                : 'https://khel-saarthi-backend.onrender.com';
 
             socket = io(SERVER_URL);
 
@@ -48,7 +48,6 @@ const AppNavigator = () => {
                     type: 'info',
                     text1: title,
                     text2: message,
-                    onPress: () => { /* Optional: navigate to chat on tap */ }
                 });
             });
 
@@ -79,7 +78,7 @@ const AppNavigator = () => {
                 ) : (
                     <>
                         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-                        <Stack.Screen name="Register" component={RegisterScreen} />
+                        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
                     </>
                 )}
             </Stack.Navigator>
