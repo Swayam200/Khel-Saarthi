@@ -10,12 +10,14 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app); // Create an HTTP server from our Express app
-const io = new Server(server, { // Initialize Socket.IO with the server
+const io = new Server(server, {
     cors: {
-        origin: "*", // Allow all origins for simplicity in development
+        // Allow connections from your live Netlify PWA
+        origin: "https://capable-tartufo-0dc856.netlify.app",
         methods: ["GET", "POST"]
     }
 });
+
 
 app.use(cors());
 app.use(express.json());

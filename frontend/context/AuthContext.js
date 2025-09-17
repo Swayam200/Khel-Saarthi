@@ -10,19 +10,22 @@ export const AuthProvider = ({ children }) => {
 
     // Check if user is logged in when app starts
     useEffect(() => {
-        const loadUser = async () => {
-            const token = await AsyncStorage.getItem('userToken');
-            if (token) {
-                // Here you would typically verify the token with your backend
-                // For simplicity, we'll just re-set the user info if token exists
-                const userData = await AsyncStorage.getItem('userData');
-                setUser(JSON.parse(userData));
-                api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            }
-            setLoading(false);
-        };
-        loadUser();
-    }, []);
+        let socket;
+        if (user) {
+            // --- THIS IS THE FIX ---
+            const SERVER_URL = process.env.NODE_ENV === 'development'
+                ? `http://${Constants.expoConfig.hostUri.split(':')[0]}:5001`
+                : 'https://khel-saarthi-backend.onrender.com';
+
+            socket = io(SERVER_URL);
+            // --- END OF FIX ---
+
+            const subscribeToNotifications = async () => { /* ... */ };
+            subscribeToNotifications();
+            socket.on('notification', ({ title, message }) => { /* ... */ });
+            return () => socket.disconnect();
+        }
+    }, [user]);
 
     const login = async (email, password) => {
         try {

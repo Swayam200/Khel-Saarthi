@@ -15,34 +15,24 @@ const ChatScreen = ({ route }) => {
     const [loading, setLoading] = useState(true); // Add loading state
     const socketRef = useRef(null);
 
+    // In frontend/screens/ChatScreen.js
+
     useEffect(() => {
-        // --- NEW: Function to fetch old messages ---
-        const fetchChatHistory = async () => {
-            try {
-                const { data } = await api.get(`/events/${eventId}/chat`);
-                setMessages(data.reverse()); // Reverse to show newest messages at the bottom
-            } catch (error) {
-                console.error("Failed to fetch chat history", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        // --- THIS IS THE FIX ---
+        const SERVER_URL = process.env.NODE_ENV === 'development'
+            ? `http://${Constants.expoConfig.hostUri.split(':')[0]}:5001`
+            : 'https://khel-saarthi-backend.onrender.com';
 
-        fetchChatHistory(); // Fetch history when the component mounts
+        const newSocket = io(SERVER_URL);
+        // --- END OF FIX ---
 
-        const hostUri = Constants.expoConfig.hostUri;
-        const ipAddress = hostUri.split(':')[0];
-        const SERVER_URL = `http://${ipAddress}:5001`;
-        socketRef.current = io(SERVER_URL);
-        socketRef.current.emit('joinRoom', eventId);
-
-        socketRef.current.on('receiveMessage', (receivedMessage) => {
-            setMessages(previousMessages => [receivedMessage, ...previousMessages]);
-        });
-
-        return () => socketRef.current.disconnect();
+        setSocket(newSocket);
+        newSocket.emit('joinRoom', eventId);
+        newSocket.on('receiveMessage', (receivedMessage) => { /* ... */ });
+        return () => newSocket.disconnect();
     }, [eventId]);
 
+    // ... (rest of the file)
     const sendMessage = () => {
         if (message.trim() && socketRef.current) {
             // The backend will now save the message and broadcast it back
