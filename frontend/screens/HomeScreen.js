@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Alert, Text, ScrollView, FlatList, TouchableOpacity } from 'react-native';
-import MapView, { Marker, Callout } from 'react-native-maps';
+import { MapView, Marker, Callout } from '../components/ConditionalMap';
 import api from '../api/api';
 import AuthContext from '../context/AuthContext';
 import StyledButton from '../components/StyledButton';

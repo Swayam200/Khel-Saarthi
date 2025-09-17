@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Alert, ScrollView, TouchableOpacity } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { MapView, Marker } from '../components/ConditionalMap'; 
 import api from '../api/api';
 import StyledButton from '../components/StyledButton';
 
