@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { io } from 'socket-io-client';
+import { io } from 'socket.io-client';
 import Constants from 'expo-constants';
 import Toast from 'react-native-toast-message';
 import api from '../api/api';
