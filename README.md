@@ -45,6 +45,12 @@ Khel Saarthi is a mobile-first platform designed to solve the fragmentation in I
 
 ## Getting Started
 
+Just run the following in root folder
+```
+ npm run dev
+``` 
+### Ignore these  
+
 Follow these instructions to get the project up and running on your local machine for development and testing.
 
 ### Prerequisites

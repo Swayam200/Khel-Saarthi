@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/userModel');
 const generateToken = require('../utils/generateToken');
+const Event = require('../models/eventModel'); 
 
 // @desc    Register a new user
 // @route   POST /api/users/register
@@ -58,4 +59,16 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { registerUser, loginUser };
+// @desc    Get all events a user is registered for
+// @route   GET /api/users/myevents
+// @access  Private
+const getMyEvents = asyncHandler(async (req, res) => {
+    // Find all events where the registeredParticipants array contains the user's ID
+    const events = await Event.find({ registeredParticipants: req.user._id });
+    // Return just the IDs of those events
+    const eventIds = events.map(event => event._id);
+    res.json(eventIds);
+});
+
+
+module.exports = { registerUser, loginUser, getMyEvents };

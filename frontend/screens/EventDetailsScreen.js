@@ -101,6 +101,14 @@ const EventDetailsScreen = ({ route, navigation }) => {
                 </>
             )}
 
+            {(isHost || isRegistered) && (
+                <StyledButton
+                    title="Go to Event Chat"
+                    onPress={() => navigation.navigate('Chat', { eventId: event._id, eventTitle: event.title })}
+                    style={{ backgroundColor: '#34C759', marginBottom: 10 }} // Green color
+                />
+            )}
+
         </ScrollView>
     );
 };

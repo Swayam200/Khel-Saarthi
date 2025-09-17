@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 const {
     getAllEvents,
-    getEventById, // Import the new function
+    getEventById,
     createEvent,
+    updateEvent,
     registerForEvent,
     getEventParticipants,
-    updateEvent,
+    getChatHistory,
 } = require('../controllers/eventController');
 const { protect } = require('../middleware/authMiddleware');
 
-// Define routes
 router.route('/').get(getAllEvents).post(protect, createEvent);
-router.route('/:id').get(getEventById);
+router.route('/:id').get(getEventById).put(protect, updateEvent);
 router.route('/:id/register').post(protect, registerForEvent);
 router.route('/:id/participants').get(protect, getEventParticipants);
-router.route('/:id').get(getEventById).put(protect, updateEvent); 
+router.route('/:id/chat').get(protect, getChatHistory);
 
 module.exports = router;
