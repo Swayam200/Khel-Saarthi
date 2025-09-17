@@ -69,19 +69,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export default AuthContext;
-```
-
----
-## ## Final Step: Push the Fix to GitHub
-
-This fix is the final piece to make your deployed PWA stable.
-
-1.  **Commit your changes:**
-    ```bash
-    git add frontend / context / AuthContext.js
-    git commit - m "fix: Add robust user loading to prevent infinite spinner"
-    ```
-2.  **Push to GitHub:**
-    ```bash
-    git push origin main
-
